@@ -1,6 +1,3 @@
-//Get the textContent of "texto-entrada"
-var p_text = document.querySelector("#texto-entrada").textContent.toLowerCase();
-
 function countLetter(a_lot_of_text){
     var letters = {
         a: 0,
@@ -39,6 +36,25 @@ function countLetter(a_lot_of_text){
     return letters;
 }
 
+function countWords(a_lot_of_text){
+    //Split by all non-characters and clean the result leaving only words
+    var words = a_lot_of_text.split(/\W/).filter(word => word!='');
+
+    var list_words = {}
+
+    for (var i=0; i < words.length; i++){
+        if ( isNaN( list_words[ words[i] ] ) ){
+            list_words[words[i]]=1;
+        }
+        else{
+            list_words[words[i]]++;
+        }
+    };
+    return list_words;
+    
+}
+
+
 //Generates the html element to render the info
 function createListData(div, data_1 = "Letra: ", data_2 = "Cantidad"){
     var p_result = document.createElement("p");
@@ -57,8 +73,12 @@ function createListData(div, data_1 = "Letra: ", data_2 = "Cantidad"){
     div.appendChild(p_result);
 };
 
+//Get the textContent of "texto-entrada"
+var p_text = document.querySelector("#texto-entrada").textContent.toLowerCase();
 
 var div_result = document.querySelector("#resultados");
+
+//Part I 
 var list_of_letters = countLetter(p_text);
 
 keys = Object.keys(list_of_letters);
@@ -73,4 +93,17 @@ while(i < values.length) {
     i++;
 };
 
+//Part II
+var list_of_words = countWords(p_text);
 
+keys = Object.keys(list_of_words);
+values = Object.values(list_of_words);
+
+createListData(div_result, "Palabra: ");
+i = 0;
+while(i < values.length) {
+    if ( !isNaN( values[i] ) ){
+        createListData(div_result, (keys[i] + ": "), values[i]);
+    };
+    i++;
+};
